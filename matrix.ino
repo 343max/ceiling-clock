@@ -106,7 +106,7 @@ void loop(void)
   time_t t = now() - 3600 * 9;
   char charBuf[100];
   char delimiter = second(t) % 2 == 0 ? ':' : ' ';
-  sprintf(charBuf, "%02u%c%02u", hour(t), delimiter, minute(t));
+  sprintf(charBuf, "%u%c%02u", hour(t), delimiter, minute(t));
   P.displayText(charBuf, PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT );
   while (!P.displayAnimate());
 }
