@@ -23,6 +23,8 @@
 #define DATA_PIN  D4
 #define CS_PIN    D3
 
+#define TIMEZONE -8
+
 const char* ssid = "***REMOVED***";
 const char* password = "***REMOVED***";
 
@@ -97,13 +99,13 @@ void setup(void)
       Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
     }
   });
-  NTP.begin("pool.ntp.org", 1, true);
+  NTP.begin("pool.ntp.org", TIMEZONE, true);
   NTP.setInterval(1800);
 }
 
 void loop(void)
 {
-  time_t t = now() - 3600 * 9;
+  time_t t = now();
   char charBuf[100];
   char delimiter = second(t) % 2 == 0 ? ':' : ' ';
   sprintf(charBuf, "%u%c%02u", hour(t), delimiter, minute(t));
