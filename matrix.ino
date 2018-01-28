@@ -27,6 +27,16 @@ const char* ssid = "***REMOVED***";
 const char* password = "***REMOVED***";
 
 uint8_t space[] = { 1, 0x00 }; // Space same width as colon ':'
+uint8_t digit0[] = { 4,0x3e,0x41,0x41,0x3e };
+uint8_t digit1[] = { 4,0x04,0x42,0x7f,0x40 };
+uint8_t digit2[] = { 4,0x62,0x51,0x49,0x46 };
+uint8_t digit3[] = { 4,0x22,0x41,0x49,0x36 };
+uint8_t digit4[] = { 4,0x0c,0x0b,0x08,0x7e };
+uint8_t digit5[] = { 4,0x27,0x45,0x45,0x39 };
+uint8_t digit6[] = { 4,0x3e,0x49,0x49,0x32 };
+uint8_t digit7[] = { 4,0x01,0x79,0x05,0x03 };
+uint8_t digit8[] = { 4,0x36,0x49,0x49,0x36 };
+uint8_t digit9[] = { 4,0x26,0x49,0x49,0x3e };
 
 // Hardware SPI connection
 // MD_Parola P = MD_Parola(CS_PIN, MAX_DEVICES);
@@ -59,6 +69,16 @@ void setup(void)
   P.begin();
   P.addChar(' ', space);
   P.displayText("...", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+  P.addChar('0', digit0);
+  P.addChar('1', digit1);
+  P.addChar('2', digit2);
+  P.addChar('3', digit3);
+  P.addChar('4', digit4);
+  P.addChar('5', digit5);
+  P.addChar('6', digit6);
+  P.addChar('7', digit7);
+  P.addChar('8', digit8);
+  P.addChar('9', digit9);
   while(!P.displayAnimate()) {}
 
   wifi_connect();
