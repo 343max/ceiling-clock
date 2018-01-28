@@ -68,7 +68,6 @@ void setup(void)
 
   P.begin();
   P.addChar(' ', space);
-  P.displayText("...", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
   P.addChar('0', digit0);
   P.addChar('1', digit1);
   P.addChar('2', digit2);
@@ -79,6 +78,8 @@ void setup(void)
   P.addChar('7', digit7);
   P.addChar('8', digit8);
   P.addChar('9', digit9);
+  
+  P.displayText("Kolja", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
   while(!P.displayAnimate()) {}
 
   wifi_connect();
