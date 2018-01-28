@@ -26,6 +26,8 @@
 const char* ssid = "***REMOVED***";
 const char* password = "***REMOVED***";
 
+uint8_t space[] = { 1, 0x00 }; // Space same width as colon ':'
+
 // Hardware SPI connection
 // MD_Parola P = MD_Parola(CS_PIN, MAX_DEVICES);
 // Arbitrary output pins
@@ -55,12 +57,12 @@ void setup(void)
   // Serial << endl << endl;
 
   P.begin();
+  P.addChar(' ', space);
   P.displayText("...", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
   while(!P.displayAnimate()) {}
 
   wifi_connect();
 
-  P.displayText("20:58", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
   NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
     if (error) {
       Serial.print("Time Sync error: ");
