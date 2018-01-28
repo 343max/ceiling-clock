@@ -19,9 +19,9 @@
 // NOTE: These pin numbers will probably not work with your hardware and may
 // need to be adapted
 #define MAX_DEVICES 4
-#define CLK_PIN   D3
+#define CLK_PIN   D2
 #define DATA_PIN  D4
-#define CS_PIN    D2
+#define CS_PIN    D3
 
 const char* ssid = "***REMOVED***";
 const char* password = "***REMOVED***";
