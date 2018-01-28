@@ -1,4 +1,3 @@
-
 // Program to demonstrate the MD_Parola library
 //
 // Simplest program that does something useful - Hello World!
@@ -12,7 +11,9 @@
 #include <ESP8266WiFi.h>
 #include <MD_Parola.h>
 #include <MD_MAX72xx.h>
+#include <NtpClientLib.h>
 #include <SPI.h>
+#include <TimeLib.h>
 
 // Define the number of devices we have in the chain and the hardware interface
 // NOTE: These pin numbers will probably not work with your hardware and may
@@ -60,9 +61,28 @@ void setup(void)
   wifi_connect();
 
   P.displayText("20:58", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+  NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
+    if (error) {
+      Serial.print("Time Sync error: ");
+      if (error == noResponse)
+        Serial.println("NTP server not reachable");
+      else if (error == invalidAddress)
+        Serial.println("Invalid NTP server address");
+    }
+    else {
+      Serial.print("Got NTP time: ");
+      Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
+    }
+  });
+  NTP.begin("pool.ntp.org", 1, true);
+  NTP.setInterval(1800);
 }
 
 void loop(void)
 {
-  P.displayAnimate();
+  time_t t = now() - 3600 * 9;
+  char charBuf[100];
+  sprintf(charBuf, "%02u:%02u", hour(t), minute(t));
+  P.displayText(charBuf, PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT );
+  while (!P.displayAnimate());
 }
