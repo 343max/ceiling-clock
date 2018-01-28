@@ -25,10 +25,16 @@
 
 #define TIMEZONE -8
 
+#define NARROW_DIGITS 0
+
+#define HOLLOW_ZERO 1
+
 const char* ssid = "***REMOVED***";
 const char* password = "***REMOVED***";
 
 uint8_t space[] = { 1, 0x00 }; // Space same width as colon ':'
+
+#if NARROW_DIGITS
 uint8_t digit0[] = { 4,0x3e,0x41,0x41,0x3e };
 uint8_t digit1[] = { 4,0x04,0x42,0x7f,0x40 };
 uint8_t digit2[] = { 4,0x62,0x51,0x49,0x46 };
@@ -39,6 +45,12 @@ uint8_t digit6[] = { 4,0x3e,0x49,0x49,0x32 };
 uint8_t digit7[] = { 4,0x01,0x79,0x05,0x03 };
 uint8_t digit8[] = { 4,0x36,0x49,0x49,0x36 };
 uint8_t digit9[] = { 4,0x26,0x49,0x49,0x3e };
+#endif
+
+#if HOLLOW_ZERO
+uint8_t hollow_digit0[] = { 5,0x3e,0x41,0x41,0x41,0x3e };
+#endif
+
 
 // Hardware SPI connection
 // MD_Parola P = MD_Parola(CS_PIN, MAX_DEVICES);
@@ -70,6 +82,7 @@ void setup(void)
 
   P.begin();
   P.addChar(' ', space);
+#if NARROW_DIGITS
   P.addChar('0', digit0);
   P.addChar('1', digit1);
   P.addChar('2', digit2);
@@ -80,6 +93,11 @@ void setup(void)
   P.addChar('7', digit7);
   P.addChar('8', digit8);
   P.addChar('9', digit9);
+#endif
+
+#if HOLLOW_ZERO
+  P.addChar('0', hollow_digit0);
+#endif
   
   P.displayText("Kolja", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
   while(!P.displayAnimate()) {}
