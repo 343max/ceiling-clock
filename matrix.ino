@@ -49,15 +49,15 @@ void wifi_connect(void)
 
 void setup(void)
 {
-  // Serial.begin(115200);
-  // delay(10);
+  Serial.begin(115200);
+  delay(10);
   // Serial << endl << endl;
 
   P.begin();
-  // P.displayText("...", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
-  // while(!P.displayAnimate()) {}
+  P.displayText("...", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+  while(!P.displayAnimate()) {}
 
-  // wifi_connect();
+  wifi_connect();
 
   P.displayText("20:58", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
 }
