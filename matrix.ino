@@ -141,7 +141,12 @@ void update_time(void)
     last_t = t;
     char charBuf[100];
     char delimiter = second() % 2 == 0 ? ':' : ' ';
-    sprintf(charBuf, "%u%c%02u", hour(), delimiter, minute());
+#if FORMAT_12H
+    int h = hourFormat12();
+#else
+    int h = hour();
+#endif
+    sprintf(charBuf, "%u%c%02u", h, delimiter, minute());
     P.displayText(charBuf, PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT );
     while (!P.displayAnimate());
     digitalWrite(BUILTIN_LED, HIGH);
