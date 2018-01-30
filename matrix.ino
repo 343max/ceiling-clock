@@ -25,8 +25,8 @@
 
 #define TIMEZONE -8
 
-#define HOLLOW_ZERO 1
-#define NARROW_DIGITS 0
+#define HOLLOW_ZERO 0
+#define NARROW_DIGITS 1
 
 const char* ssid = "***REMOVED***";
 const char* password = "***REMOVED***";
