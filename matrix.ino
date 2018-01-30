@@ -8,6 +8,8 @@
 // https://majicdesigns.github.io/MD_MAX72XX/page_hardware.html
 //
 
+#include "config.h"
+
 #include <ESP8266WiFi.h>
 #include <MD_Parola.h>
 #include <MD_MAX72xx.h>
@@ -23,14 +25,8 @@
 #define DATA_PIN  D4
 #define CS_PIN    D3
 
-#define TIMEZONE -8
-
-#define HOLLOW_ZERO 0
-#define NARROW_DIGITS 1
-#define FLIP_DISPLAY 1
-
-const char* ssid = "***REMOVED***";
-const char* password = "***REMOVED***";
+const char* ssid = "343max";
+const char* password = "famukismus56";
 
 uint8_t space[] = { 1, 0x00 }; // Space same width as colon ':'
 
