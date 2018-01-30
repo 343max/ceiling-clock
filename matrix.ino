@@ -71,6 +71,13 @@ void wifi_connect(void)
   }
   Serial.println("");
   Serial.println("WiFi connected");
+
+  char charBuf[100];
+  IPAddress localIP = WiFi.localIP();
+  sprintf(charBuf, "%u.%u.%u.%u", localIP[0], localIP[1], localIP[2], localIP[3]);
+  P.displayText(charBuf, PA_CENTER, 0, 0, PA_SCROLL_LEFT, PA_NO_EFFECT);
+  while(!P.displayAnimate());
+  delay(3000);
 }
 
 void setup(void)
