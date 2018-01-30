@@ -71,13 +71,17 @@ void wifi_connect(void)
   }
   Serial.println("");
   Serial.println("WiFi connected");
+}
 
+void display_ip(void)
+{
   char charBuf[100];
   IPAddress localIP = WiFi.localIP();
   sprintf(charBuf, "%u.%u.%u.%u", localIP[0], localIP[1], localIP[2], localIP[3]);
-  P.displayText(charBuf, PA_CENTER, 0, 0, PA_SCROLL_LEFT, PA_NO_EFFECT);
+  P.displayText(charBuf, PA_LEFT, 25, 0, PA_SCROLL_LEFT, PA_NO_EFFECT);
   while(!P.displayAnimate());
-  delay(3000);
+  delay(500);
+  P.displayReset();
 }
 
 void setup(void)
@@ -109,6 +113,7 @@ void setup(void)
   while(!P.displayAnimate()) {}
 
   wifi_connect();
+  display_ip();
 
   NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
     if (error) {
