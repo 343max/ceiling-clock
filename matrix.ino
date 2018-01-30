@@ -27,6 +27,7 @@
 
 #define HOLLOW_ZERO 0
 #define NARROW_DIGITS 1
+#define FLIP_DISPLAY 1
 
 const char* ssid = "***REMOVED***";
 const char* password = "***REMOVED***";
@@ -91,6 +92,10 @@ void setup(void)
   // Serial << endl << endl;
 
   P.begin();
+#if FLIP_DISPLAY
+  P.setZoneEffect(0, true, PA_FLIP_LR);
+#endif
+
   P.addChar(' ', space);
 #if NARROW_DIGITS
   P.addChar('0', digit0);
