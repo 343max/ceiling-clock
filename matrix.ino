@@ -25,9 +25,6 @@
 #define DATA_PIN  D4
 #define CS_PIN    D3
 
-const char* ssid = "343max";
-const char* password = "famukismus56";
-
 uint8_t space[] = { 1, 0x00 }; // Space same width as colon ':'
 
 #if NARROW_DIGITS
