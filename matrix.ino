@@ -122,10 +122,9 @@ void setup(void)
 
 void loop(void)
 {
-  time_t t = now();
   char charBuf[100];
-  char delimiter = second(t) % 2 == 0 ? ':' : ' ';
-  sprintf(charBuf, "%u%c%02u", hour(t), delimiter, minute(t));
+  char delimiter = second() % 2 == 0 ? ':' : ' ';
+  sprintf(charBuf, "%u%c%02u", hour(), delimiter, minute());
   P.displayText(charBuf, PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT );
   while (!P.displayAnimate());
 }
