@@ -125,13 +125,27 @@ void setup(void)
   });
   NTP.begin("pool.ntp.org", TIMEZONE, true);
   NTP.setInterval(1800);
+
+  pinMode(BUILTIN_LED, OUTPUT);
+}
+
+void update_time(void)
+{
+  static time_t last_t;
+  time_t t = now();
+
+  if (t != last_t) {
+    last_t = t;
+    char charBuf[100];
+    char delimiter = second() % 2 == 0 ? ':' : ' ';
+    sprintf(charBuf, "%u%c%02u", hour(), delimiter, minute());
+    P.displayText(charBuf, PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT );
+    while (!P.displayAnimate());
+    digitalWrite(BUILTIN_LED, HIGH);
+  }
 }
 
 void loop(void)
 {
-  char charBuf[100];
-  char delimiter = second() % 2 == 0 ? ':' : ' ';
-  sprintf(charBuf, "%u%c%02u", hour(), delimiter, minute());
-  P.displayText(charBuf, PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT );
-  while (!P.displayAnimate());
+  update_time();
 }
