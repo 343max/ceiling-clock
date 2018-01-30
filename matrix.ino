@@ -93,7 +93,7 @@ void setup(void)
 
   P.begin();
 #if FLIP_DISPLAY
-  P.setZoneEffect(0, true, PA_FLIP_LR);
+  P.setZoneEffect(0, true, PA_FLIP_UD);
 #endif
 
   P.addChar(' ', space);
