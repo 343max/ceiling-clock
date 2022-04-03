@@ -3,7 +3,7 @@
 #include <ESP8266WiFi.h>
 #include <MD_Parola.h>
 #include <MD_MAX72xx.h>
-#include <NtpClientLib.h>
+#include <ESPNtpClient.h>
 #include <SPI.h>
 #include <TimeLib.h>
 
@@ -36,9 +36,9 @@ uint8_t hollow_digit0[] = { 5,0x3e,0x41,0x41,0x41,0x3e };
 
 
 // Hardware SPI connection
-// MD_Parola P = MD_Parola(CS_PIN, MAX_DEVICES);
+// MD_Parola Display = MD_Parola(CS_PIN, MAX_DEVICES);
 // Arbitrary output pins
-MD_Parola P = MD_Parola(DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES);
+MD_Parola Display = MD_Parola(MD_MAX72XX::FC16_HW, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES);
 
 void wifi_connect(void)
 {
@@ -47,6 +47,7 @@ void wifi_connect(void)
   Serial.print("Connecting to ");
   Serial.println(ssid);
  
+  WiFi.hostname(hostname);
   WiFi.begin(ssid, password);
  
   while (WiFi.status() != WL_CONNECTED) {
@@ -62,64 +63,69 @@ void display_ip(void)
   char charBuf[100];
   IPAddress localIP = WiFi.localIP();
   sprintf(charBuf, "%u.%u.%u.%u", localIP[0], localIP[1], localIP[2], localIP[3]);
-  P.displayText(charBuf, PA_LEFT, 25, 0, PA_SCROLL_LEFT, PA_NO_EFFECT);
-  while(!P.displayAnimate());
+  Display.displayText(charBuf, PA_LEFT, 25, 0, PA_SCROLL_LEFT, PA_NO_EFFECT);
+  while(!Display.displayAnimate());
   delay(500);
-  P.displayReset();
+  Display.displayReset();
 }
 
 void setup(void)
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   delay(10);
   // Serial << endl << endl;
 
-  P.begin();
+  Display.begin();
 #if FLIP_DISPLAY
-  P.setZoneEffect(0, true, PA_FLIP_UD);
+  Display.setZoneEffect(0, true, PA_FLIP_UD);
 #endif
 
-  P.addChar(' ', space);
+  Display.addChar(' ', space);
 #if NARROW_DIGITS
-  P.addChar('0', digit0);
-  P.addChar('1', digit1);
-  P.addChar('2', digit2);
-  P.addChar('3', digit3);
-  P.addChar('4', digit4);
-  P.addChar('5', digit5);
-  P.addChar('6', digit6);
-  P.addChar('7', digit7);
-  P.addChar('8', digit8);
-  P.addChar('9', digit9);
+  Display.addChar('0', digit0);
+  Display.addChar('1', digit1);
+  Display.addChar('2', digit2);
+  Display.addChar('3', digit3);
+  Display.addChar('4', digit4);
+  Display.addChar('5', digit5);
+  Display.addChar('6', digit6);
+  Display.addChar('7', digit7);
+  Display.addChar('8', digit8);
+  Display.addChar('9', digit9);
 #endif
 
 #if HOLLOW_ZERO
-  P.addChar('0', hollow_digit0);
+  Display.addChar('0', hollow_digit0);
 #endif
   
-  P.displayText("Kolja", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
-  while(!P.displayAnimate()) {}
+  Display.displayText("Hallo!", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+  while(!Display.displayAnimate()) {}
 
   wifi_connect();
   display_ip();
 
-  NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
-    if (error) {
-      Serial.print("Time Sync error: ");
-      if (error == noResponse)
-        Serial.println("NTP server not reachable");
-      else if (error == invalidAddress)
-        Serial.println("Invalid NTP server address");
-    }
-    else {
-      Serial.print("Got NTP time: ");
-      Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
-    }
+  NTP.onNTPSyncEvent([](NTPEvent_t event) {
+    Serial.printf ("[NTP-event] %s\n", NTP.ntpEvent2str(event));
+    setTime(NTP.getLastNTPSync());
   });
-  NTP.begin("pool.ntp.org", TIMEZONE, true);
-  NTP.setInterval(1800);
+  NTP.setTimeZone(TZ_Europe_Berlin);
+  NTP.setInterval(3600 * 12);
+  NTP.begin("pool.ntp.org", true);
 
-  pinMode(BUILTIN_LED, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+static char charBuf[100];
+
+char *getTimeStr() {
+  time_t currentTime = time(NULL);
+  tm *local_tm = localtime(&currentTime);
+  if (local_tm->tm_sec % 2 == 0) {
+    strftime(charBuf, sizeof(charBuf), "%H:%M", local_tm);
+  } else {
+    strftime(charBuf, sizeof(charBuf), "%H %M", local_tm);
+  }
+  return charBuf;
 }
 
 void update_time(void)
@@ -129,17 +135,11 @@ void update_time(void)
 
   if (t != last_t) {
     last_t = t;
-    char charBuf[100];
-    char delimiter = second() % 2 == 0 ? ':' : ' ';
-#if FORMAT_12H
-    int h = hourFormat12();
-#else
-    int h = hour();
-#endif
-    sprintf(charBuf, "%u%c%02u", h, delimiter, minute());
-    P.displayText(charBuf, PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT );
-    while (!P.displayAnimate());
-    digitalWrite(BUILTIN_LED, HIGH);
+    const char* timeStr = getTimeStr();
+    Serial.println(timeStr);
+    Display.displayText(timeStr, PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT );
+    while (!Display.displayAnimate());
+    digitalWrite(LED_BUILTIN, HIGH);
   }
 }
 

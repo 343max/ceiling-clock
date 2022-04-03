@@ -1,6 +1,4 @@
-
-// your timezone
-#define TIMEZONE -8
+#include <ESPNtpClient.h>
 
 // a zero without the strike through in the middle
 #define HOLLOW_ZERO 0
@@ -9,9 +7,7 @@
 // flip the display. neccessary for projection mode
 #define FLIP_DISPLAY 1
 
-// set to 0 for 12 hour format
-#define FORMAT_12H 1
-
 // wifi credentials
-const char* ssid = "wifi name";
-const char* password = "password";
+const char* ssid = "<wifi ssid>";
+const char* password = "<wifi password>";
+const char* hostname = "<hostname for this device>";

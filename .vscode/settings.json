@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    ".env": "fish",
+    "random": "cpp",
+    "*.tcc": "cpp"
+  }
+}
