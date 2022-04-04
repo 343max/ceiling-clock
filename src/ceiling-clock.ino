@@ -15,7 +15,11 @@
 #define DATA_PIN  D4
 #define CS_PIN    D3
 
-uint8_t space[] = { 1, 0x00 }; // Space same width as colon ':'
+// Space and colon should have the same width
+uint8_t space[] = { 1, 0x00 };
+uint8_t colon[] = { 1, 0x36 };
+
+uint8_t smiley[] = {8, 60, 66, 149, 161, 161, 149, 66, 60 };
 
 #if NARROW_DIGITS
 uint8_t digit0[] = { 4,0x3e,0x41,0x41,0x3e };
@@ -73,7 +77,6 @@ void setup(void)
 {
   Serial.begin(9600);
   delay(10);
-  // Serial << endl << endl;
 
   Display.begin();
 #if FLIP_DISPLAY
@@ -81,6 +84,10 @@ void setup(void)
 #endif
 
   Display.addChar(' ', space);
+  Display.addChar(':', colon);
+
+  Display.addChar('~', smiley);
+
 #if NARROW_DIGITS
   Display.addChar('0', digit0);
   Display.addChar('1', digit1);
@@ -98,7 +105,7 @@ void setup(void)
   Display.addChar('0', hollow_digit0);
 #endif
   
-  Display.displayText("Hallo!", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+  Display.displayText("~ Hello!", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
   while(!Display.displayAnimate()) {}
 
   wifi_connect();
@@ -136,7 +143,6 @@ void update_time(void)
   if (t != last_t) {
     last_t = t;
     const char* timeStr = getTimeStr();
-    Serial.println(timeStr);
     Display.displayText(timeStr, PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT );
     while (!Display.displayAnimate());
     digitalWrite(LED_BUILTIN, HIGH);
